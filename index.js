@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 mongoose.connect("mongodb+srv://mnu4513:monu8181@firstcluster.daae6aq.mongodb.net/url-short-group1", { useNewUrlParser: true })
     .then(() => {
-        console.log("mondoDB is connected");
+        console.log("mongoDB is connected");
     })
     .catch((err) => {
         console.log(err);

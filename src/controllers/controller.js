@@ -11,16 +11,22 @@ const createUrl = async function (req, res) {
     urlDetails = await urlModel.findOne({longUrl: data.longUrl});
     if (urlDetails) return res.status(400).send({status: false, message: 'please enter a unique longUrl'});
 
+    let urlcode = shortid.generate(data.longUrl); 
+    data.shortUrl = `http://localhost:3000/${urlcode}` 
+    data.urlCode = urlcode 
 
+    urlDetails = await urlModel.findOne({urlCode: data.urlCode});
+    if (urlDetails) return res.status(400).send({status: false, message: 'please use a unique urlCode'});
 
-    let urlCode = shortid.generate(data.longUrl); 
-    data.shortUrl = `http://localhost:3000/${urlCode}` 
-    data.urlCode = urlCode 
+    urlDetails = await urlModel.findOne({shortUrl: data.shortUrl});
+    if (urlDetails) return res.status(400).send({status: false, message: 'please use a unique shortUrl'});
 
     const urlCreated = await urlModel.create(data);
 
-    res.send({a: urlCode, b: data.shortUrl});
-    // urlDetails = await
+    const {longUrl, shortUrl, urlCode} = urlCreated;
+    
+    res.status(201).send({status: true, data: {longUrl, shortUrl, urlCode}})
+    
 };
 
 module.exports = {createUrl};

@@ -7,7 +7,7 @@ router.get("/test", function (req, res) {
     res.send("working");
 });
 router.post("/url/shorten", controller.createUrl);
-router.get("/url/:urlCode", controller.geturl);
+router.get("/:urlCode", controller.geturl);
 
 router.all("/*", function (req, res) {
     res.status(404).send({ status: false, message: "invalid url" });

@@ -15,6 +15,6 @@ mongoose.connect("mongodb+srv://mnu4513:monu8181@firstcluster.daae6aq.mongodb.ne
 const route = require('./src/routes/route');
 app.use('/', route);
 
-app.listen(process.env.PORT || 3001, function () {
-    console.log('server is runnign on prot' + process.env.PORT || 3001)
+app.listen(process.env.PORT || 3000, function () {
+    console.log('server is runnign on prot' + process.env.PORT || 3000)
 });

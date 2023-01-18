@@ -1,4 +1,8 @@
-const validUrl = (url) => (/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%.\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%\+.~#?&\/=]*)$/).test(url);
+function isValid(value){
+    if (typeof value=== "undefined" || typeof value ===null) return false
+    if (typeof value=== "string" &&  value.trim().length===0) return false
+    if (typeof value=== "number" &&  value.trim().length===0) return false
+    return true
+}
 
-const validUrlCode = (code) => (/^[a-zA-Z0-9_-]*$/).test(code);
-module.exports = {validUrl, validUrlCode}
+module.exports= {isValid}

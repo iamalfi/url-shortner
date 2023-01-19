@@ -64,14 +64,20 @@ exports.geturl = async function (req, res)  {
     try {
         let urlCode = req.params.urlCode;
 
-        if (!isValid(urlCode.trim())) return res.status(400).send({status: false, message: 'please enter a valid urlCode'});
-        
-        let data = await urlModel.findOne({ urlCode });
-        if( )
+        if (!shortid.isValid(urlCode)) return res.status(400).send({status: false, message: 'please enter a valid urlCode'});
 
-        if (!data) {return res.status(404).send({ status: false, message: "Url not found" });};
+       // ......................check url code in cache memory or not........................................
+        let cacheData = await GET_ASYNC(`${urlCode}`)
+        let obj = JSON.parse(cacheData)
+        if(obj) return res.status(302).redirect(obj.longUrl)
 
-        res.status(200).send({ status: true, data: data.longUrl});
+       //....................Check Url code in Data-base.............................................
+        let checkUrlCode = await urlModel.findOne({urlCode: urlCode}).select({longUrl:1,_id:0});
+        if (!checkUrlCode) return res.status(404).send({ status: false, message: "Url not found" });
+
+    
+        await SET_ASYNC (`${urlCode}`,3600, JSON.stringify(checkUrlCode))
+        return res.status(302).redirect(checkUrlCode.longUrl);
     } catch (error) {
         res.status(500).send({ status: false, message: error.message });
     };

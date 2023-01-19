@@ -23,9 +23,10 @@ const redisClient = redis.createClient(
         console.log("Successfully conected to redis")
     })
 
+    const SET_ASYNC =   promisify(redisClient.SETEX).bind(redisClient)
+    const GET_ASYNC = promisify(redisClient.GET).bind(redisClient)
 
-
-//create URL -----------------------------------------------------------------------------------------------
+//create short  URL -----------------------------------------------------------------------------------------------
 
 exports.createUrl = async function (req, res) {
     try {
@@ -48,8 +49,8 @@ exports.createUrl = async function (req, res) {
         data.urlCode = urlcode;
 
         const urlCreated = await urlModel.create(data);
-
         const { longUrl, shortUrl, urlCode } = urlCreated;
+        await SET_ASYNC(`${urlCode}`,3600,JSON.stringify(urlCreated))
 
         res.status(201).send({status: true,data: { longUrl, shortUrl, urlCode },});
     } catch (error) {
@@ -59,17 +60,16 @@ exports.createUrl = async function (req, res) {
 
 // get url-----------------------------------------------------------------------------------------------------
 
-exports.geturl = async (req, res) => {
+exports.geturl = async function (req, res)  {
     try {
         let urlCode = req.params.urlCode;
 
         if (!isValid(urlCode.trim())) return res.status(400).send({status: false, message: 'please enter a valid urlCode'});
-
-
+        
         let data = await urlModel.findOne({ urlCode });
-        if (!data) {
-            return res.status(404).send({ status: false, message: "Url not found" });
-        };
+        if( )
+
+        if (!data) {return res.status(404).send({ status: false, message: "Url not found" });};
 
         res.status(200).send({ status: true, data: data.longUrl});
     } catch (error) {
